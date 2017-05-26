@@ -54,6 +54,9 @@ public class WordUtil {
 
 		try {
 			t.process(dataMap, out);
+			if(out != null){
+	            out.close();
+	        }
 		} catch (TemplateException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
