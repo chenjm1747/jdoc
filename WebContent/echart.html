@@ -104,58 +104,61 @@
        			setTimeout(exportImage, 2000);
 
        			//原生ajax
-                function exportImage(){
-                    var charturl=myChart.getDataURL("png");
+       //          function exportImage(){
+       //              var charturl=myChart.getDataURL("png");
+       //              console.log("chart url is "+charturl);
+	      //           var data = "a="+encodeURIComponent(myChart.getDataURL("png"));
+	      //           console.log(data);
+				   //  var xmlhttp;
+				   //  if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+				   //      xmlhttp = new XMLHttpRequest();
+				   //  } else { // code for IE6, IE5
+				   //      xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+				   //  }
+				   //  xmlhttp.open("POST",saveImageUrl,true);
+				   //  xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+				   //  xmlhttp.onreadystatechange = function() {
+				   //      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				   //          alert("保存chart成功");
+				   //      }else{
+				   //      	alert("保存chart失败");
+				   //      }
+				   //  }
+				   //  xmlhttp.send(data);
+			    // }
+
+			    //jQuery封装的ajax
+			    function exportImage(){
+			    	var charturl=myChart.getDataURL("png");
                     console.log("chart url is "+charturl);
-	                var data = "a="+encodeURIComponent(myChart.getDataURL("png"));
-	                console.log(data);
-				    var xmlhttp;
-				    if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
-				        xmlhttp = new XMLHttpRequest();
-				    } else { // code for IE6, IE5
-				        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-				    }
-				    xmlhttp.open("POST",saveImageUrl,true);
-				    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-				    xmlhttp.onreadystatechange = function() {
-				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-				            alert("保存chart成功");
-				        }else{
-				        	alert("保存chart失败");
-				        }
-				    }
-				    xmlhttp.send(data);
-			    }
+	                var imageData = "a="+encodeURIComponent(myChart.getDataURL("png"));
+	                console.log(imageData);
+					jQuery.ajax(saveImageUrl, {
+						data: imageData,
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 3000, //超时时间设置为10秒；
+						async: false,
+						success: function(data) {
+							// alert("保存chart成功");
+							exportImageSuccess(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							// alert("保存chart失败");
+							exportImageFailed(errorThrown);
+						}
+					});
+				}
 
-			 //    //jQuery封装的ajax
-			 //    function exportImage(){
-			 //    	var charturl=myChart.getDataURL("png");
-    //                 console.log("chart url is "+charturl);
-	   //              var imageData = "a="+encodeURIComponent(myChart.getDataURL("png"));
-	   //              console.log(imageData);
-				// 	jQuery.ajax(saveImageUrl, {
-				// 		data: imageData,
-				// 		dataType: 'json', //服务器返回json格式数据
-				// 		type: 'post', //HTTP请求类型
-				// 		timeout: 3000, //超时时间设置为10秒；
-				// 		async: false,
-				// 		success: function(data) {
-				// 			exportImageSuccess(data);
-				// 		},
-				// 		error: function(xhr, type, errorThrown) {
-				// 			exportImageSuccess(errorThrown);
-				// 		}
-				// 	});
-				// }
+				function exportImageSuccess(data) {
+					console.log(JSON.stringify(data));
+					alert("保存chart成功");
+				}
 
-				// function exportImageSuccess(data) {
-				// 	console.log(JSON.stringify(data));
-				// 	alert("保存chart成功");
-				// }
-
-				// function exportImageSuccess(data) {
-				// 	alert("保存chart失败");
-				// }
+				function exportImageFailed(data) {
+					console.log(JSON.stringify(data));
+					alert("保存chart失败");
+				}
 
 		</script>
 	</body>
