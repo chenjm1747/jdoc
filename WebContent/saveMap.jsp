@@ -108,10 +108,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
        			} 
                 setTimeout(exportImage, 2000);
                 function exportImage(){
-                	var map_url="<%=path%>/servlet/saveMap";
-				    console.log("map_url is "+map_url);
-                    var charturl=myChart.getDataURL("png");
-                    console.log("chart url is "+charturl);
 	                var data = "a="+encodeURIComponent(myChart.getDataURL("png"));
 	                console.log(data);
 				    var xmlhttp;
@@ -129,29 +125,27 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				    }
 				    xmlhttp.send(data);
 			    }
-       
-       // 			setTimeout(exportMap, 2000);
                 
-       //          function exportMap(){
-	      //           var data = "a="+encodeURIComponent("http://115.159.218.200:4000/basics/map.html");
-	      //           console.log(data);
-				   //  var xmlhttp;
-				   //  if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
-				   //      xmlhttp = new XMLHttpRequest();
-				   //  } else { // code for IE6, IE5
-				   //      xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-				   //  }
-				   //  var map_url="<%=path%>/servlet/saveMap";
-				   //  console.log("map_url is "+map_url);
-				   //  xmlhttp.open("POST","<%=path%>/servlet/saveMap",true);
-				   //  xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-				   //  xmlhttp.onreadystatechange = function() {
-				   //      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-				   //          alert("保存map成功");
-				   //      }
-				   //  }
-				   //  xmlhttp.send(data);
-			    // }
+                function exportMap(){
+	                var data = "a="+encodeURIComponent("http://115.159.218.200:4000/basics/map.html");
+	                console.log(data);
+				    var xmlhttp;
+				    if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+				        xmlhttp = new XMLHttpRequest();
+				    } else { // code for IE6, IE5
+				        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+				    }
+				    var map_url="<%=path%>/servlet/saveMap";
+				    console.log("map_url is "+map_url);
+				    xmlhttp.open("POST","<%=path%>/servlet/saveMap",true);
+				    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+				    xmlhttp.onreadystatechange = function() {
+				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				            alert("保存map成功");
+				        }
+				    }
+				    xmlhttp.send(data);
+			    }
 			    
     </script>
 </body>

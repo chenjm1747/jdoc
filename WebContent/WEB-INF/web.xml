@@ -18,4 +18,14 @@
     <servlet-name>saveImage</servlet-name>
     <url-pattern>/servlet/saveImage</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>saveMap</servlet-name>
+    <servlet-class>com.servlet.SaveMap</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>saveMap</servlet-name>
+    <url-pattern>/servlet/saveMap</url-pattern>
+  </servlet-mapping>
 </web-app>

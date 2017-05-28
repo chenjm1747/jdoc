@@ -11,6 +11,8 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Map;
+import org.apache.log4j.Logger;
+
 
 import sun.misc.BASE64Encoder;
 import freemarker.template.Configuration;
@@ -19,11 +21,11 @@ import freemarker.template.TemplateException;
 
 public class WordUtil {
 	private Configuration configuration = null;
+	final Logger log = Logger.getLogger(WordUtil.class);
 
 	public WordUtil() {
 		configuration = new Configuration();
 		configuration.setDefaultEncoding("utf-8");
-
 	}
 
 	public void createWord(String templetName, String infilePathName, String outfilePathName, Map<String, Object> dataMap) {
@@ -35,7 +37,7 @@ public class WordUtil {
 			// 获取模版文件
 			 t = configuration.getTemplate(templetName,"UTF-8");
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.toString());
 		}
 		// 生成文件的路径和名称
 		File outFile = new File(outfilePathName);
@@ -46,10 +48,10 @@ public class WordUtil {
 						new FileOutputStream(outFile), "UTF-8"));
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error(e.toString());
 			}
 		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
+			log.error(e1.toString());
 		}
 
 		try {
@@ -58,9 +60,9 @@ public class WordUtil {
 	            out.close();
 	        }
 		} catch (TemplateException e) {
-			e.printStackTrace();
+			log.error(e.toString());
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.toString());
 		}
 	}
 
@@ -73,15 +75,22 @@ public class WordUtil {
 			in.read(data);
 			in.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.toString());
 		}
 		BASE64Encoder encoder = new BASE64Encoder();
 		return encoder.encode(data);
 	}
 	public String getPath() {
-		String nowpath = System.getProperty("user.dir");
+		String nowpath = System.getProperty("user.home");
+		log.info("nowpath is "+nowpath);
+		String catalinahome = System.getProperty("catalina.home");
+		log.info("catalina home is "+catalinahome);
+		String catalinabase = System.getProperty("catalina.base");
+		log.info("catalina base is "+catalinabase);
 		String path = nowpath.replace("bin", "webapps");
-		path += "\\"+"TestWeb"+"\\"+"word";
+		log.info("path is "+path);
+		path += "/"+"word";
+		log.info("path is "+path);
 		File tmp = new File(path);
 		if (!tmp.exists()) {
 			tmp.mkdirs();
