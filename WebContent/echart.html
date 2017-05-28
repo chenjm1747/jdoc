@@ -140,11 +140,9 @@
 						timeout: 3000, //超时时间设置为10秒；
 						async: false,
 						success: function(data) {
-							// alert("保存chart成功");
 							exportImageSuccess(data);
 						},
 						error: function(xhr, type, errorThrown) {
-							// alert("保存chart失败");
 							exportImageFailed(errorThrown);
 						}
 					});
