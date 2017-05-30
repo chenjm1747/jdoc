@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="/ol.css" type="text/css">
+    <style>
+      .map {
+        height: 256px;
+        width: 512px;
+      }
+    </style>
+    <title>OpenLayers example</title>
+  </head>
+  <body>
+    <h1>My Map</h1>
+    <div id="map" class="map"></div>
+    <a id="export-png" class="btn btn-default"><i class="fa fa-download"></i> Download PNG</a>
+    <script src="/loader.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      var map = new ol.Map({
+        target: 'map',
+        layers: [
+          new ol.layer.Tile({
+              title: 'Global Imagery',
+              source: new ol.source.TileWMS({
+              crossOrigin: 'anonymous',
+              url: 'https://ahocevar.com/geoserver/wms',
+              params: {'LAYERS': 'nasa:bluemarble', 'VERSION': '1.1.1'}
+            })
+          })
+        ],
+        view: new ol.View({
+          projection: 'EPSG:4326',
+          center: [0, 0],
+          zoom: 0,
+          maxResolution: 0.703125
+        })
+      });
+
+
+      var dataURL='';
+
+      //download map
+      // document.getElementById('export-png').addEventListener('click', function() {
+      //   map.once('postcompose', function(event) {
+      //     var canvas = event.context.canvas;
+      //     if (navigator.msSaveBlob) {
+      //       navigator.msSaveBlob(canvas.msToBlob(), 'map.png');
+      //     } else {
+      //       canvas.toBlob(function(blob) {
+      //         saveAs(blob, 'map.png');
+      //       });
+      //     }
+      //   });
+      //   map.renderSync();
+      // });
+      
+
+      function getMapBase64(){
+
+          map.once('postcompose', function(event) {
+              var canvas = event.context.canvas;
+              dataURL = canvas.toDataURL("image/png");
+              setTimeout(exportImage, 2000);
+          });
+          map.renderSync();
+      }
+
+
+
+      function getBase64(url){
+          console.log("getBase64");
+          //通过构造函数来创建的 img 实例，在赋予 src 值后就会立刻下载图片，相比 createElement() 创建 <img> 省去了 append()，也就避免了文档冗余和污染
+          var Img = new Image();
+          Img.src=url;
+          Img.onload=function(){ //要先确保图片完整获取到，这是个异步事件
+              var myDate = new Date();
+              var mytime=myDate.toLocaleTimeString();
+              console.log(mytime+" Img.onload begin");
+              var canvas = document.createElement("canvas"), //创建canvas元素
+              width=Img.width, //确保canvas的尺寸和图片一样
+              height=Img.height;
+              canvas.width=width;
+              canvas.height=height;
+              canvas.getContext("2d").drawImage(Img,0,0,width,height); //将图片绘制到canvas中
+              dataURL=canvas.toDataURL('image/png'); //转换图片为dataURL
+              myDate = new Date();
+              mytime=myDate.toLocaleTimeString();
+              console.log(mytime+" Img.onload end");
+          };
+      }
+
+
+      getMapBase64();
+      // getBase64("http://115.159.218.200:4000/map.png");
+
+      var saveImageUrl="http://115.159.218.200:8080/jdoc/servlet/saveImage"
+      
+
+      function exportImage(){
+          console.log("dataURL is "+dataURL);
+          var imageData = "a="+encodeURIComponent(dataURL);
+          console.log(imageData);
+          var xmlhttp;
+          if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+              xmlhttp = new XMLHttpRequest();
+          } else { // code for IE6, IE5
+              xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+          }
+          xmlhttp.open("POST",saveImageUrl,true);
+          xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+          xmlhttp.onreadystatechange = function() {
+              if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                  alert("保存map成功");
+              }else{
+                alert("保存map失败");
+              }
+          }
+          xmlhttp.send(imageData);
+      }
+
+
+
+      // function exportImage(){
+      //       var mapurl=getBase64(saveImageUrl);
+      //       console.log("map url is "+mapurl);
+      //       var imageData = "a="+encodeURIComponent(getBase64(saveImageUrl));
+      //       console.log(imageData);
+      //       jQuery.ajax(saveImageUrl, {
+      //         data: imageData,
+      //         dataType: 'json', //服务器返回json格式数据
+      //         type: 'post', //HTTP请求类型
+      //         timeout: 3000, //超时时间设置为10秒；
+      //         async: false,
+      //         success: function(data) {
+      //           exportImageSuccess(data);
+      //         },
+      //         error: function(xhr, type, errorThrown) {
+      //           exportImageFailed(errorThrown);
+      //         }
+      //       });
+      //   }
+
+      //   function exportImageSuccess(data) {
+      //     console.log(JSON.stringify(data));
+      //     alert("保存map成功");
+      //   }
+
+      //   function exportImageFailed(data) {
+      //     console.log(JSON.stringify(data));
+      //     alert("保存map失败");
+      //   }
+    </script>
+  </body>
+</html>
