@@ -40,15 +40,11 @@
 
 
       function savePic(){
-        console.log("savePic");
         map.once('postcompose', function(event) {
-          console.log("map.once");
           var canvas = event.context.canvas;
           if (navigator.msSaveBlob) {
-            console.log("navigator.msSaveBlob");
             navigator.msSaveBlob(canvas.msToBlob(), 'map.png');
           } else {
-            console.log("else");
             canvas.toBlob(function(blob) {
               saveAs(blob, 'map.png');
             });
@@ -62,27 +58,19 @@
       function getMapBase64(){
 
           map.once('postcompose', function(event) {
-              console.log("map.once");
               var canvas = event.context.canvas;
               dataURL = canvas.toDataURL("image/png");
-              console.log("dataURL is "+dataURL);
           });
-          console.log("map.renderSync begin");
           map.renderSync();
-          console.log("map.renderSync end");
       }
 
 
 
       function getBase64(url){
-          console.log("getBase64");
           //通过构造函数来创建的 img 实例，在赋予 src 值后就会立刻下载图片，相比 createElement() 创建 <img> 省去了 append()，也就避免了文档冗余和污染
           var Img = new Image();
           Img.src=url;
           Img.onload=function(){ //要先确保图片完整获取到，这是个异步事件
-              var myDate = new Date();
-              var mytime=myDate.toLocaleTimeString();
-              console.log(mytime+" Img.onload begin");
               var canvas = document.createElement("canvas"), //创建canvas元素
               width=Img.width, //确保canvas的尺寸和图片一样
               height=Img.height;
@@ -90,9 +78,6 @@
               canvas.height=height;
               canvas.getContext("2d").drawImage(Img,0,0,width,height); //将图片绘制到canvas中
               dataURL=canvas.toDataURL('image/png'); //转换图片为dataURL
-              myDate = new Date();
-              mytime=myDate.toLocaleTimeString();
-              console.log(mytime+" Img.onload end");
           };
       }
 
@@ -111,9 +96,7 @@
       
 
       function exportImage(){
-          // console.log("dataURL is "+dataURL);
           var imageData = "a="+encodeURIComponent(dataURL);
-          // console.log(imageData);
           var xmlhttp;
           if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
               xmlhttp = new XMLHttpRequest();
